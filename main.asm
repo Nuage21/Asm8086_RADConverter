@@ -183,7 +183,122 @@ ROMAN_VALUE proc near
     end:
     pop bp
     ret
-    ROMAN_VALUE endp 
+    ROMAN_VALUE endp  
+
+TO_ROMAN proc near
+    ; convert to roman_expressed
+    ; return: in output buffer 
+    ; the pushed item [2 bytes] from stack
+    push bp
+    mov bp, sp
+    mov ax, [bp+4] 
+    lea bx, output
+    
+    TR_while:
+    cmp ax, 0
+    je TR_end
+    cmp ax, 1000
+    jl TR_elif1
+    mov [bx], 'M'
+    inc bx
+    sub ax, 1000
+    jmp TR_while 
+    TR_elif1:
+    cmp ax, 500
+    jl TR_elif2
+    cmp ax, 900
+    jl TR_elif1_else
+    mov [bx], 'C'
+    mov [bx+1], 'M'
+    add bx, 2
+    sub ax, 900
+    jmp TR_while
+    TR_elif1_else:
+    mov [bx], 'C'
+    inc bx
+    sub ax, 500
+    jmp TR_while
+    TR_elif2:
+    cmp ax, 100
+    jl TR_elif3
+    cmp ax, 400
+    jl TR_elif2_else
+    mov [bx], 'C'
+    mov [bx+1], 'D'
+    add bx, 2
+    sub ax, 400
+    jmp TR_while
+    TR_elif2_else:
+    mov [bx], 'C'
+    inc bx
+    sub ax, 100
+    jmp TR_while
+    TR_elif3:
+    
+    cmp ax, 50
+    jl TR_elif4
+    cmp ax, 90
+    jl TR_elif3_else
+    mov [bx], 'X'
+    mov [bx+1], 'C'
+    add bx, 2
+    sub ax, 90
+    jmp TR_while
+    TR_elif3_else:
+    mov [bx], 'L'
+    inc bx
+    sub ax, 50
+    jmp TR_while
+    TR_elif4:
+    
+    cmp ax, 9
+    jl TR_elif5
+    cmp ax, 40
+    jl TR_elif4_elif
+    mov [bx], 'X'
+    mov [bx+1], 'L'
+    add bx, 2
+    sub ax, 40
+    jmp TR_while
+    TR_elif4_elif:
+    cmp ax, 9
+    jne TR_elif4_else
+    mov [bx], 'I'
+    mov [bx+1], 'X'
+    add bx, 2
+    sub ax, 9
+    jmp TR_while
+    TR_elif4_else:
+    mov [bx], 'X'
+    inc bx
+    sub ax, 10
+    jmp TR_while
+    
+    TR_elif5:
+    cmp ax, 4
+    jl TR_else
+    cmp ax, 5
+    jl TR_elif5_else
+    mov [bx], 'V'
+    inc bx
+    sub ax, 5
+    jmp TR_while
+    TR_elif5_else:
+    mov [bx], 'I'
+    mov [bx+1], 'V'
+    add bx, 2
+    sub ax, 4
+    jmp TR_while
+    
+    TR_else:
+    mov [bx], 'I'
+    inc bx
+    dec ax
+    jmp TR_while
+    TR_end:
+    pop bp
+    ret 
+    TO_ROMAN endp
 
 ends
 
