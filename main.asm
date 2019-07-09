@@ -283,7 +283,32 @@ TO_ROMAN proc near
     TR_end:
     pop bp
     ret 
-    TO_ROMAN endp
+    TO_ROMAN endp  
+    
+STR_TO_INT proc near 
+    ; @input to int stored in AX
+    lea bx, input
+    xor ax, ax ; zero-it
+    mov cx, 10 ; to power
+    STI_loop:
+    push ax
+    mov ax, [bx] 
+    xor ah, ah
+    cmp ax, '$'
+    je STI_end
+    mov dx, ax
+    pop ax
+    push dx
+    mul cx 
+    pop dx
+    sub dx, 48 ; ascii to int
+    add ax, dx
+    inc bx ; next digit of input
+    jmp STI_loop
+    STI_end:
+    pop ax
+    ret
+    STR_TO_INT endp
 
 ends
 
