@@ -6,7 +6,7 @@ org 100h
 
 .data
 
-welcomeStr      db "Hi welcome to the RDConverter __ completely written with asm8086$"
+welcomeStr      db "Hi welcome to the RADConverter __ completely written with asm8086$"
 enterStr        db "Please enter a number to be convert: $"
 romanToArabStr  db "Arab digits equivalent = $"
 arabToRomanStr  db "Roman digits equivalent = $"
@@ -323,7 +323,27 @@ STR_TO_INT proc near
     STI_end:
     pop ax
     ret
-    STR_TO_INT endp
+    STR_TO_INT endp 
+
+isDigit proc near
+    ; return ax = 0 when pushed 
+    ; item assci is a digit
+    push bp
+    mov bp, sp
+    mov ax, [bp+4]
+    sub ax, 48
+    cmp ax, 10
+    jl isDig_
+    isDig_not: mov ax, -1 
+    jmp isDig_end
+    isDig_:
+    cmp ax, 0
+    jl isDig_not
+    mov ax, 0000h 
+    isDig_end:
+    pop bp
+    ret
+    isDigit endp
 
 ends
 
