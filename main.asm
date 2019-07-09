@@ -124,6 +124,67 @@ isRomanDigit proc near
     ret
 isRomanDigit endp
 
+ROMAN_VALUE proc near
+    ; return in ax(al) the ROMAN value 
+    ; of a pushed char, (-1) it it's not roman
+    
+    push bp
+    mov bp, sp
+    mov ax, [bp+4] ;load pushed
+    cmp ax, 'I'
+    jne RV_case2
+    mov ax, 1
+    jmp end 
+    
+    RV_case2:
+    cmp ax, 'V'
+    jne RV_case3
+    mov ax, 5
+    jmp end
+    
+    RV_case3:
+    cmp ax, 'X'
+    jne RV_case4
+    mov ax, 10
+    jmp end
+    
+    RV_case4:
+    cmp ax, 'L'
+    jne RV_case5
+    mov ax, 50
+    jmp end
+    
+    RV_case5:
+    cmp ax, 'C'
+    jne RV_case6
+    mov ax, 100
+    jmp end
+    
+    RV_case6:
+    cmp ax, 'D'
+    jne RV_case7
+    mov ax, 500
+    jmp end
+    
+    RV_case7:
+    cmp ax, 'M'
+    jne RV_case8
+    mov ax, 1000
+    jmp end  
+    
+    RV_case8:
+    cmp ax, 0
+    jne RV_default
+    mov ax, 0
+    jmp end
+    
+    RV_default:
+    mov ax, -1
+    end:
+    pop bp
+    ret
+    ROMAN_VALUE endp 
+
 ends
 
 
