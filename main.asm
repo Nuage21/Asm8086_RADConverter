@@ -68,7 +68,7 @@ get_str proc near
     
     cmp al, 0dh     ; is it a carriage return ?
     je end_while1
-    cmp al, 9h      ; backspace ?
+    cmp al, 8h      ; backspace ?
     jne else1
     dec di          ; move str ptr back 
     dec bx          ; charCounter--
