@@ -6,10 +6,11 @@ org 100h
 
 .data
 
-welcomeStr      db "Hi welcome to the RANUM_CONVERTER __ completely written with asm8086$"
+welcomeStr      db "Hi welcome to the RDConverter __ completely written with asm8086$"
 enterStr        db "Please enter a number to be convert: $"
-romanToArabStr  db "Conversion from roman to arab digits...$"
-arabToRomanStr  db "Conversion from arab to roman digits...$"
+romanToArabStr  db "Arab digits equivalent = $"
+arabToRomanStr  db "Roman digits equivalent = $"
+anotherTryStr   db "Another Try ? (y/n): "
 endlStr         db 0ah, 0dh, '$'
 
 ; ROMAN DIGTS
@@ -45,9 +46,23 @@ mov ax, @data
 mov ds, ax
 
 print_str welcomeStr
-endl 
-print_str enterStr
+prog_begin: endl 
+print_str enterStr 
+lea di, input
 
+call get_str
+call STR_TO_INT
+push ax
+call TO_ROMAN
+endl
+print_str arabToRomanStr
+print_str output
+endl
+print_str anotherTryStr
+mov ah, 1
+int 21h ; reads answer
+cmp al, 'y'
+je prog_begin  
  
 mov ah, 4ch
 int 21h
