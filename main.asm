@@ -18,7 +18,8 @@ CROMAN_DIGITS db 'I', 'V', 'X', 'L', 'C', 'D', 'M' ; Capital 7 chars
 LROMAN_DIGITS db 'i', 'v', 'x', 'l', 'c', 'd', 'm' ; little chars  
 
 
-input      db "$$$$$$$$$$" ; read stream
+input           db "$$$$$$$$$$$$$$$" ; read stream
+output          db "$$$$$$$$$$$$$$$" ; by default string proc return
 
 ends
 
@@ -46,23 +47,7 @@ mov ds, ax
 print_str welcomeStr
 endl 
 print_str enterStr
-endl
 
-mov ax, 'C'
-push ax
-call isRomanDigit
-cmp al, 00h
-jne cmp1
-print_str romanToArabStr
-cmp1:
-print_str arabToRomanStr  
-
-;mov bx, 09h
-;lea di, input   
-
-;call get_str
-;endl
-;print_str input
  
 mov ah, 4ch
 int 21h
