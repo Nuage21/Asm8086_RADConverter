@@ -345,6 +345,45 @@ isDigit proc near
     ret
     isDigit endp
 
+isRAI proc near
+    ; string treated is @input (implicitly)
+    ; ret: (al == ff) => Invalid (not arab nor Roman) 
+    ; (ah == 00) => isRoman =true
+    ; (ah == ff) => isArab = true
+    
+    lea bx, input
+    mov ax, 0ff00h ; ah -> isRoman
+                    ; al -> isValid
+    prg_lp:
+    mov dx, [bx]
+    xor dh, dh 
+    cmp dl, '$'
+    je prd_lp_end
+    push ax
+    push dx
+    call isRomanDigit
+    cmp ax, 00h
+    pop dx
+    pop ax 
+    jne prg_elif
+    mov ax, 00h ; isRoman <- true
+    jmp prdlp
+    prg_elif:
+    push ax ; save return value
+    push dx
+    call isDigit 
+    cmp ax, 0 ;isDigit
+    pop dx
+    pop ax
+    je prdlp ; if an arab digit
+    mov al, 0ffh ; isValid <- false 
+    prdlp: 
+    inc bx
+    jmp prg_lp
+    prd_lp_end:
+    ret
+ends
+
 ends
 
 
