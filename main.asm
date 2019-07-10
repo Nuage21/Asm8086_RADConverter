@@ -2,7 +2,7 @@
 ; RADConverter is an asm8086 program which converts Roman & Arab expressed numbers to each other
 ; written in July 2019
 ; by: > Hakim Beldjoudi (ih_beldjoudi@esi.dz)
-;     > Maissa Boukaf   (mailadresss@esi.dz)
+;     > type name here
 
 org 100h
 
