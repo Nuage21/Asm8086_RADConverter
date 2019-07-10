@@ -24,7 +24,7 @@ LROMAN_DIGITS db 'i', 'v', 'x', 'l', 'c', 'd', 'm' ; little chars
 
 
 input           db "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" ; read stream
-output          db "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" ; by default string proc return
+output          db "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" ; by default string proc return
 
 ends
 
@@ -44,7 +44,7 @@ macro endl
     print_str endlStr
 endm
 
-.code
+.code ;---------------------------------------main_begin
 
 mov ax, @data
 mov ds, ax
@@ -109,6 +109,7 @@ je prog_begin
 mov ah, 4ch
 int 21h
 
+;--------------------------------anin_end
 get_str proc near   
                     ; Reads and stores a string.                            
                     ; input: DI offset of string                            
@@ -141,7 +142,9 @@ get_str proc near
     pop ax
     ret                                               
 
-get_str endp      
+get_str endp
+
+;-------------------------------------------------------
 
 isRomanDigit proc near
     ; enter a char through pile 
@@ -152,22 +155,32 @@ isRomanDigit proc near
     push bx ;save it 
     mov ax, 1
     lea bx, LROMAN_DIGITS
+    lea si, CROMAN_DIGITS
     mov cx, 7  
     while2:
+    push ax
     mov dh,[bx]
+    mov al,[si]
     cmp dl, dh
+    je yesRoman 
+    cmp dl, al
     je yesRoman
+    pop ax
     inc bx
+    inc si
     loop while2
     pop bx
     pop bp 
     ret
     yesRoman:
+    pop ax
     mov ax, 00h 
     pop bx
     pop bp
     ret
-isRomanDigit endp
+isRomanDigit endp  
+
+;-------------------------------------------------------
 
 ROMAN_VALUE proc near
     ; return in ax(al) the ROMAN value 
@@ -228,7 +241,8 @@ ROMAN_VALUE proc near
     end:
     pop bp
     ret
-    ROMAN_VALUE endp  
+    ROMAN_VALUE endp                                    
+;-------------------------------------------------------
 
 TO_ROMAN proc near
     ; convert to roman_expressed
@@ -343,7 +357,8 @@ TO_ROMAN proc near
     TR_end:
     pop bp
     ret 
-    TO_ROMAN endp  
+    TO_ROMAN endp 
+;------------------------------------------------------- 
     
 STR_TO_INT proc near 
     ; @input to int stored in AX
@@ -369,6 +384,7 @@ STR_TO_INT proc near
     pop ax
     ret
     STR_TO_INT endp 
+;-------------------------------------------------------
 
 isDigit proc near
     ; return ax = 0 when pushed 
@@ -389,6 +405,7 @@ isDigit proc near
     pop bp
     ret
     isDigit endp
+;-------------------------------------------------------
 
 isRAI proc near
     ; string treated is @input (implicitly)
@@ -427,6 +444,7 @@ isRAI proc near
     jmp prg_lp
     prd_lp_end:
     ret
+;-------------------------------------------------------
     
 resetStr proc near
     ; reset to $$$$ given @str pushed
@@ -444,5 +462,6 @@ resetStr proc near
     ret    
 ends
 
+;-----------------------------------code_seg_end--------
 
 
