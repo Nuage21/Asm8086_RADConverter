@@ -13,6 +13,7 @@ enterStr        db "Please enter a number to be convert: $"
 romanToArabStr  db "Arab digits equivalent = $"
 arabToRomanStr  db "Roman digits equivalent = $"
 anotherTryStr   db "Another Try ? (y/n): "
+invalidStr      db "Invalid entry !"
 endlStr         db 0ah, 0dh, '$'
 
 ; ROMAN DIGTS
@@ -53,13 +54,34 @@ print_str enterStr
 lea di, input
 
 call get_str
-call STR_TO_INT
+call isRAI
+cmp al, 00h
+jne invalid
+cmp ah, 00h
+je  toArabCnvrt
 push ax
+call STR_TO_INT
+push ax 
 call TO_ROMAN
+pop ax
+pop ax
 endl
 print_str arabToRomanStr
 print_str output
+jmp retry
+
+toArabCnvrt:
 endl
+print_str romanToArabStr
+; call TO_ARAB proc here !
+;
+jmp retry
+ 
+invalid:
+endl
+print_str invalidStr
+retry:
+endl 
 print_str anotherTryStr
 mov ah, 1
 int 21h ; reads answer
