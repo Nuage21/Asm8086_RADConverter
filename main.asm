@@ -483,6 +483,57 @@ resetStr proc near
     ret    
 ends
 
+ROMAN_TO_INT proc near
+    ; get the equivalen integer through AX to the roman-expressed
+    ; -- number @input 
+    lea bx, input ; load input into bx  
+    xor ax, ax ; hold the result
+    STI_lp:
+    mov dh, [bx]
+    mov dl, [bx+1]
+    cmp dh, '$'
+    je STI_lp_end ; last digit reached
+    cmp dl, '$'
+    jne STI_ct ; go if not before-last digit
+    push ax
+    xor ax, ax
+    mov al, dh
+    push ax
+    call ROMAN_VALUE
+    mov di, ax
+    pop ax
+    pop ax
+    add ax, di ; add current value
+    inc bx
+    jmp STI_lp
+    STI_ct:
+    push ax
+    xor ax, ax
+    mov al, dh
+    push ax
+    call ROMAN_VALUE
+    mov cx, ax
+    pop ax
+    xor ax, ax
+    mov al, dl
+    push ax
+    call ROMAN_VALUE
+    mov di, ax
+    pop ax
+    pop ax ; retrieve current acumulated sum
+    cmp cx, di
+    jl STI_sub
+    add ax, cx
+    inc bx
+    jmp STI_lp
+    STI_sub:
+    sub ax, cx
+    inc bx
+    jmp STI_lp 
+    STI_lp_end:
+    ret
+ROMAN_TO_INT endp 
+
 ;-----------------------------------code_seg_end--------
 
 
