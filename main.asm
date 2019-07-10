@@ -49,7 +49,19 @@ mov ax, @data
 mov ds, ax
 
 print_str welcomeStr
-prog_begin: endl 
+prog_begin: 
+; reset i/o strings
+lea di, input
+push di
+call resetStr
+pop di
+lea di, output
+push di
+call resetStr
+pop di
+
+; ---> start
+endl 
 print_str enterStr 
 lea di, input
 
@@ -411,8 +423,21 @@ isRAI proc near
     jmp prg_lp
     prd_lp_end:
     ret
-ends
-
+    
+resetStr proc near
+    ; reset to $$$$ given @str pushed
+    push bp
+    mov bp, sp
+    mov di, [bp+4]
+    RS_lp:
+    cmp [di], '$'
+    je RS_end
+    mov [di], '$'
+    inc di
+    jmp RS_lp
+    RS_end:
+    pop bp
+    ret    
 ends
 
 
