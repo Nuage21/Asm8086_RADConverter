@@ -22,8 +22,8 @@ CROMAN_DIGITS db 'I', 'V', 'X', 'L', 'C', 'D', 'M' ; Capital 7 chars
 LROMAN_DIGITS db 'i', 'v', 'x', 'l', 'c', 'd', 'm' ; little chars  
 
 
-input           db "$$$$$$$$$$$$$$$" ; read stream
-output          db "$$$$$$$$$$$$$$$" ; by default string proc return
+input           db "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" ; read stream
+output          db "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" ; by default string proc return
 
 ends
 
