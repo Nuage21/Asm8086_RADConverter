@@ -190,57 +190,64 @@ ROMAN_VALUE proc near
     mov bp, sp
     mov ax, [bp+4] ;load pushed
     cmp ax, 'I'
-    jne RV_case2 
+    je RV_case1_ 
     cmp ax, 'i'
     jne RV_case2
+    RV_case1_:
     mov ax, 1
     jmp end 
     
     RV_case2:
     cmp ax, 'V'
-    jne RV_case3 
+    je RV_case2_ 
     cmp ax, 'v'
     jne RV_case3
+    RV_case2_:
     mov ax, 5
     jmp end
     
     RV_case3:
     cmp ax, 'X'
-    jne RV_case4
+    je RV_case3_
     cmp ax, 'x'
     jne RV_case4
+    RV_case3_:
     mov ax, 10
     jmp end
     
     RV_case4:
     cmp ax, 'L'
-    jne RV_case5
+    je RV_case4_
     cmp ax, 'l'
     jne RV_case5
+    RV_case4_:
     mov ax, 50
     jmp end
     
     RV_case5:
     cmp ax, 'C'
-    jne RV_case6
+    je RV_case5_
     cmp ax, 'c'
-    jne RV_case6
+    jne RV_case6 
+    RV_case5_:
     mov ax, 100
     jmp end
     
     RV_case6:
     cmp ax, 'D'
-    jne RV_case7  
+    je RV_case6_  
     cmp ax, 'd'
     jne RV_case7
+    RV_case6_:
     mov ax, 500
     jmp end
     
     RV_case7:
     cmp ax, 'M'
-    jne RV_case8
+    je RV_case7_
     cmp ax, 'm'
     jne RV_case8
+    RV_case7_:
     mov ax, 1000
     jmp end  
     
@@ -255,7 +262,7 @@ ROMAN_VALUE proc near
     end:
     pop bp
     ret
-    ROMAN_VALUE endp                                    
+    ROMAN_VALUE endp                                   
 ;-------------------------------------------------------
 
 TO_ROMAN proc near
