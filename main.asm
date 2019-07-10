@@ -89,8 +89,15 @@ jmp retry
 toArabCnvrt:
 endl
 print_str romanToArabStr
-; call TO_ARAB proc here !
 ;
+call ROMAN_TO_INT
+push ax
+; call TO_ARAB !
+;
+;
+;
+pop ax
+print_str output
 jmp retry
  
 invalid:
