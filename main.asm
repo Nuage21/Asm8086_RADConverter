@@ -9,6 +9,7 @@ org 100h
 .data
 
 welcomeStr      db "Hi welcome to the RADConverter __ completely written with asm8086$"
+hzStr           db "_________________________________________________________________$"
 enterStr        db "Please enter a number to be convert: $"
 romanToArabStr  db "Arab digits equivalent = $"
 arabToRomanStr  db "Roman digits equivalent = $"
@@ -49,6 +50,7 @@ mov ax, @data
 mov ds, ax
 
 print_str welcomeStr
+
 prog_begin: 
 ; reset i/o strings
 lea di, input
@@ -61,6 +63,8 @@ call resetStr
 pop di
 
 ; ---> start
+endl
+print_str hzStr
 endl 
 print_str enterStr 
 lea di, input
@@ -407,7 +411,7 @@ isRAI proc near
     pop dx
     pop ax 
     jne prg_elif
-    mov ax, 00h ; isRoman <- true
+    mov ah, 00h ; isRoman <- true
     jmp prdlp
     prg_elif:
     push ax ; save return value
