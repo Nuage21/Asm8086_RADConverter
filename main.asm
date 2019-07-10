@@ -103,10 +103,11 @@ get_str endp
 
 isRomanDigit proc near
     ; enter a char through pile 
-    ; return ah, 00h means it's a roman 
+    ; return ax, 00h means it's a roman 
     push bp
     mov bp, sp
-    mov dx, [bp+4] 
+    mov dx, [bp+4]
+    push bx ;save it 
     mov ax, 1
     lea bx, LROMAN_DIGITS
     mov cx, 7  
@@ -116,10 +117,12 @@ isRomanDigit proc near
     je yesRoman
     inc bx
     loop while2
+    pop bx
     pop bp 
     ret
     yesRoman:
-    mov al, 00h
+    mov ax, 00h 
+    pop bx
     pop bp
     ret
 isRomanDigit endp
