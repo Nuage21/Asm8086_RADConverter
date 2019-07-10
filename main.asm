@@ -146,7 +146,7 @@ get_str endp
 
 ;-------------------------------------------------------
 
-isRomanDigit proc near
+isRomanDigit proc near  ; insensitive_case
     ; enter a char through pile 
     ; return ax, 00h means it's a roman 
     push bp
@@ -190,12 +190,16 @@ ROMAN_VALUE proc near
     mov bp, sp
     mov ax, [bp+4] ;load pushed
     cmp ax, 'I'
+    jne RV_case2 
+    cmp ax, 'i'
     jne RV_case2
     mov ax, 1
     jmp end 
     
     RV_case2:
     cmp ax, 'V'
+    jne RV_case3 
+    cmp ax, 'v'
     jne RV_case3
     mov ax, 5
     jmp end
@@ -203,11 +207,15 @@ ROMAN_VALUE proc near
     RV_case3:
     cmp ax, 'X'
     jne RV_case4
+    cmp ax, 'x'
+    jne RV_case4
     mov ax, 10
     jmp end
     
     RV_case4:
     cmp ax, 'L'
+    jne RV_case5
+    cmp ax, 'l'
     jne RV_case5
     mov ax, 50
     jmp end
@@ -215,17 +223,23 @@ ROMAN_VALUE proc near
     RV_case5:
     cmp ax, 'C'
     jne RV_case6
+    cmp ax, 'c'
+    jne RV_case6
     mov ax, 100
     jmp end
     
     RV_case6:
     cmp ax, 'D'
+    jne RV_case7  
+    cmp ax, 'd'
     jne RV_case7
     mov ax, 500
     jmp end
     
     RV_case7:
     cmp ax, 'M'
+    jne RV_case8
+    cmp ax, 'm'
     jne RV_case8
     mov ax, 1000
     jmp end  
