@@ -12,8 +12,8 @@ welcomeStr      db "Hi welcome to the RADConverter __ completely written with as
 enterStr        db "Please enter a number to be convert: $"
 romanToArabStr  db "Arab digits equivalent = $"
 arabToRomanStr  db "Roman digits equivalent = $"
-anotherTryStr   db "Another Try ? (y/n): "
-invalidStr      db "Invalid entry !"
+anotherTryStr   db "Another Try ? (y/n): $"
+invalidStr      db "Invalid entry !$"
 endlStr         db 0ah, 0dh, '$'
 
 ; ROMAN DIGTS
@@ -80,9 +80,11 @@ jmp retry
 invalid:
 endl
 print_str invalidStr
+
 retry:
 endl 
 print_str anotherTryStr
+
 mov ah, 1
 int 21h ; reads answer
 cmp al, 'y'
