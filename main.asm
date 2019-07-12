@@ -489,6 +489,7 @@ resetStr proc near
     pop bp
     ret    
 ends
+;-------------------------------------------------------
 
 ROMAN_TO_INT proc near
     ; get the equivalen integer through AX to the roman-expressed
@@ -540,6 +541,48 @@ ROMAN_TO_INT proc near
     STI_lp_end:
     ret
 ROMAN_TO_INT endp 
+;-------------------------------------------------------
+
+INT_TO_STR proc
+    ; converts pushed integer into a str
+    ; stored @output
+    push bp
+    mov bp, sp
+    mov ax, [bp+4]    
+    mov dx, '$'
+    push dx ;identify string end        
+    ; di holds number to convert
+    ITS_lp:
+    mov cl, 10
+    div cl    ; al holds quotient
+              ; ah holds rest
+    cmp al, 0
+    je ITS_endlp 
+    xor cx, cx
+    mov cl, ah
+    push cx    ; save digit
+    xor ah, ah ; AX holds quetient now
+               ; AX prepared to next iteration
+    jmp ITS_lp
+    ITS_endlp:
+    cmp ah, 0
+    je ITS_pop
+    xor cx, cx
+    mov cl, ah
+    push cx 
+    lea bx, output ; load output stream
+    ITS_pop:
+    pop ax
+    cmp ax, '$'
+    je ITS_end
+    add ax, 48 ; to digit eq ascci code
+    mov [bx], ax
+    inc bx ; next stock
+    jmp ITS_pop
+    ITS_end:
+    pop bp
+    ret
+INT_TO_STR endp
 
 ;-----------------------------------code_seg_end--------
 
