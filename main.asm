@@ -1,10 +1,10 @@
 
 ; RADConverter is an asm8086 written program which converts Roman & Arab expressed numbers into each other
-; works on 16bit integer
+; works on 16bit integers
 ; written: July 2019 
 ; Assembly TP (Travaux Pratiques) at Higher National School of Computer Science
-; by: > Hakim Beldjoudi (ih_beldjoudi@esi.dz)
-;     > + Binome
+; author(s): > Hakim Beldjoudi (ih_beldjoudi@esi.dz)
+;            > + Binome : type name here
 
 org 100h
 
@@ -173,7 +173,7 @@ get_str endp
 
 ;-------------------------------------------------------
 
-isRomanDigit proc near  ; insensitive_case
+isRomanDigit proc    ; insensitive_case
     ; enter a char through pile 
     ; return ax, 00h means it's a roman 
     push bp
@@ -209,7 +209,7 @@ isRomanDigit endp
 
 ;-------------------------------------------------------
 
-ROMAN_VALUE proc near
+ROMAN_VALUE proc
     ; return in ax(al) the ROMAN value 
     ; of a pushed char, (-1) it it's not roman
     
@@ -292,7 +292,7 @@ ROMAN_VALUE proc near
     ROMAN_VALUE endp                                   
 ;-------------------------------------------------------
 
-TO_ROMAN proc near
+TO_ROMAN proc 
     ; convert to roman_expressed
     ; return: in output buffer 
     ; the pushed item [2 bytes] from stack
@@ -442,7 +442,7 @@ STR_TO_INT proc
     STR_TO_INT endp 
 ;-------------------------------------------------------
 
-isDigit proc near
+isDigit proc
     ; return ax = 0 when pushed 
     ; item assci is a digit
     push bp
@@ -463,7 +463,7 @@ isDigit proc near
     isDigit endp
 ;-------------------------------------------------------
 
-isRAI proc near
+isRAI proc
     ; string treated is @input (implicitly)
     ; ret: (al == ff) => Invalid (not arab nor Roman) 
     ; (ah == 00) => isRoman =true
@@ -502,7 +502,7 @@ isRAI proc near
     ret
 ;-------------------------------------------------------
     
-resetStr proc near
+resetStr proc
     ; reset to $$$$ given @str pushed
     push bp
     mov bp, sp
@@ -519,7 +519,7 @@ resetStr proc near
 ends
 ;-------------------------------------------------------
 
-ROMAN_TO_INT proc near
+ROMAN_TO_INT proc
     ; get the equivalent integer through AX to the roman-expressed
     ; -- number @input 
     lea bx, input ; load input into bx  
@@ -575,7 +575,7 @@ ROMAN_TO_INT proc near
 ROMAN_TO_INT endp 
 ;-------------------------------------------------------
 
-INT_TO_STR proc near
+INT_TO_STR proc
     ; converts pushed integer into a str
     ; stored @output
     push bp
