@@ -13,6 +13,7 @@ org 100h
 welcomeStr      db "Welcome to the RADConverter __ completely written with asm8086$"
 esiStr          db "HIGHER NATIONAL SCHOOL OF COMPUTER SCIENCE ESI -ex-INI ALGIERS$"
 hzStr           db "______________________________________________________________$"
+overflowStr     db "Please enter a valid number, over 16bits are not supported$" 
 enterStr        db "Please enter a number to be convert: $"
 romanToArabStr  db "Arab digits equivalent = $"
 arabToRomanStr  db "Roman digits equivalent = $"
@@ -26,8 +27,8 @@ CROMAN_DIGITS db 'I', 'V', 'X', 'L', 'C', 'D', 'M' ; Capital 7 chars
 LROMAN_DIGITS db 'i', 'v', 'x', 'l', 'c', 'd', 'm' ; little chars  
 
 
-input           db "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" ; read stream
-output          db "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" ; by default string proc return
+input           db "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" ; read stream
+output          db "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" ; by default string proc return
 
 ends
 
@@ -83,7 +84,10 @@ jne invalid
 cmp ah, 00h
 je  toArabCnvrt
 push ax
+xor cx, cx
 call STR_TO_INT
+cmp cx, 0ffffh
+je prog_overflow
 push ax 
 call TO_ROMAN
 pop ax
@@ -107,6 +111,12 @@ jmp retry
 invalid:
 endl
 print_str invalidStr
+jmp retry
+
+prog_overflow:
+endl
+print_str overflowStr
+jmp retry
 
 retry:
 endl 
@@ -289,16 +299,16 @@ TO_ROMAN proc near
     cmp ax, 0
     je TR_end
     cmp ax, 1000
-    jl TR_elif1
+    jb TR_elif1
     mov [bx], 'M'
     inc bx
     sub ax, 1000
     jmp TR_while 
     TR_elif1:
     cmp ax, 500
-    jl TR_elif2
+    jb TR_elif2
     cmp ax, 900
-    jl TR_elif1_else
+    jb TR_elif1_else
     mov [bx], 'C'
     mov [bx+1], 'M'
     add bx, 2
@@ -311,9 +321,9 @@ TO_ROMAN proc near
     jmp TR_while
     TR_elif2:
     cmp ax, 100
-    jl TR_elif3
+    jb TR_elif3
     cmp ax, 400
-    jl TR_elif2_else
+    jb TR_elif2_else
     mov [bx], 'C'
     mov [bx+1], 'D'
     add bx, 2
@@ -327,9 +337,9 @@ TO_ROMAN proc near
     TR_elif3:
     
     cmp ax, 50
-    jl TR_elif4
+    jb TR_elif4
     cmp ax, 90
-    jl TR_elif3_else
+    jb TR_elif3_else
     mov [bx], 'X'
     mov [bx+1], 'C'
     add bx, 2
@@ -343,9 +353,9 @@ TO_ROMAN proc near
     TR_elif4:
     
     cmp ax, 9
-    jl TR_elif5
+    jb TR_elif5
     cmp ax, 40
-    jl TR_elif4_elif
+    jb TR_elif4_elif
     mov [bx], 'X'
     mov [bx+1], 'L'
     add bx, 2
@@ -367,9 +377,9 @@ TO_ROMAN proc near
     
     TR_elif5:
     cmp ax, 4
-    jl TR_else
+    jb TR_else
     cmp ax, 5
-    jl TR_elif5_else
+    jb TR_elif5_else
     mov [bx], 'V'
     inc bx
     sub ax, 5
@@ -406,14 +416,22 @@ STR_TO_INT proc near
     mov dx, ax
     pop ax
     push dx
-    mul cx 
+    mul cx
+    jo  STI_overflow_mul:
+    jc  STI_overflow_mul:
     pop dx
     sub dx, 48 ; ascii to int
     add ax, dx
+    jc STI_over_add
     inc bx ; next digit of input
     jmp STI_loop
+    STI_overflow_mul:
+    mov cx, 0ffffh
     STI_end:
     pop ax
+    ret
+    STI_over_add:
+    mov cx, 0ffffh
     ret
     STR_TO_INT endp 
 ;-------------------------------------------------------
@@ -426,12 +444,12 @@ isDigit proc near
     mov ax, [bp+4]
     sub ax, 48
     cmp ax, 10
-    jl isDig_
+    jb isDig_
     isDig_not: mov ax, -1 
     jmp isDig_end
     isDig_:
     cmp ax, 0
-    jl isDig_not
+    jb isDig_not
     mov ax, 0000h 
     isDig_end:
     pop bp
@@ -534,7 +552,7 @@ ROMAN_TO_INT proc near
     pop ax
     pop ax ; retrieve current acumulated sum
     cmp cx, di
-    jl STI_sub
+    jb STI_sub
     add ax, cx
     inc bx
     jmp STI_lp
