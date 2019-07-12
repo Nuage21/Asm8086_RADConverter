@@ -402,7 +402,7 @@ TO_ROMAN proc near
     TO_ROMAN endp 
 ;------------------------------------------------------- 
     
-STR_TO_INT proc near 
+STR_TO_INT proc  
     ; @input to int stored in AX
     lea bx, input
     xor ax, ax ; zero-it
@@ -514,7 +514,7 @@ ends
 ;-------------------------------------------------------
 
 ROMAN_TO_INT proc near
-    ; get the equivalen integer through AX to the roman-expressed
+    ; get the equivalent integer through AX to the roman-expressed
     ; -- number @input 
     lea bx, input ; load input into bx  
     xor ax, ax ; hold the result
@@ -565,7 +565,7 @@ ROMAN_TO_INT proc near
 ROMAN_TO_INT endp 
 ;-------------------------------------------------------
 
-INT_TO_STR proc
+INT_TO_STR proc near
     ; converts pushed integer into a str
     ; stored @output
     push bp
@@ -575,23 +575,18 @@ INT_TO_STR proc
     push dx ;identify string end        
     ; di holds number to convert
     ITS_lp:
-    mov cl, 10
-    div cl    ; al holds quotient
-              ; ah holds rest
-    cmp al, 0
+    xor dx, dx
+    mov cx, 10
+    div cx    ; AX holds the quotient
+              ; DX holds the rest
+    cmp ax, 0
     je ITS_endlp 
-    xor cx, cx
-    mov cl, ah
-    push cx    ; save digit
-    xor ah, ah ; AX holds quetient now
-               ; AX prepared to next iteration
+    push dx    ; save digit
     jmp ITS_lp
     ITS_endlp:
-    cmp ah, 0
+    cmp dx, 0
     je ITS_pop
-    xor cx, cx
-    mov cl, ah
-    push cx 
+    push dx 
     lea bx, output ; load output stream
     ITS_pop:
     pop ax
