@@ -1,15 +1,18 @@
 
-; RADConverter is an asm8086 program which converts Roman & Arab expressed numbers to each other
-; written in July 2019
+; RADConverter is an asm8086 written program which converts Roman & Arab expressed numbers into each other
+; works on 16bit integer
+; written: July 2019 
+; Assembly TP (Travaux Pratiques) at Higher National School of Computer Science
 ; by: > Hakim Beldjoudi (ih_beldjoudi@esi.dz)
-;     > type name here
+;     > + Binome
 
 org 100h
 
 .data
 
-welcomeStr      db "Hi welcome to the RADConverter __ completely written with asm8086$"
-hzStr           db "_________________________________________________________________$"
+welcomeStr      db "Welcome to the RADConverter __ completely written with asm8086$"
+esiStr          db "HIGHER NATIONAL SCHOOL OF COMPUTER SCIENCE ESI -ex-INI ALGIERS$"
+hzStr           db "______________________________________________________________$"
 enterStr        db "Please enter a number to be convert: $"
 romanToArabStr  db "Arab digits equivalent = $"
 arabToRomanStr  db "Roman digits equivalent = $"
@@ -49,6 +52,10 @@ endm
 mov ax, @data
 mov ds, ax
 
+print_str esiStr  
+endl
+print_str hzStr 
+endl
 print_str welcomeStr
 
 prog_begin: 
@@ -113,7 +120,7 @@ je prog_begin
 mov ah, 4ch
 int 21h
 
-;--------------------------------anin_end
+;--------------------------------main_end
 get_str proc near   
                     ; Reads and stores a string.                            
                     ; input: DI offset of string                            
