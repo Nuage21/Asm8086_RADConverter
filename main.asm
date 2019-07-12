@@ -98,11 +98,17 @@ print_str output
 jmp retry
 
 toArabCnvrt:
+;
+xor cx, cx ; cx = 0xffffh means overflow (roman number entered >16bits)
+call ROMAN_TO_INT
+cmp cx, 0ffffh
+je  prog_overflow
+push ax
+pusha
 endl
 print_str romanToArabStr
-;
-call ROMAN_TO_INT
-push ax
+popa
+
 call INT_TO_STR
 pop ax
 print_str output
@@ -534,6 +540,7 @@ ROMAN_TO_INT proc near
     pop ax
     pop ax
     add ax, di ; add current value
+    jc STI_over
     inc bx
     jmp STI_lp
     STI_ct:
@@ -553,13 +560,16 @@ ROMAN_TO_INT proc near
     pop ax ; retrieve current acumulated sum
     cmp cx, di
     jb STI_sub
-    add ax, cx
+    add ax, cx 
+    jc STI_over
     inc bx
     jmp STI_lp
     STI_sub:
     sub ax, cx
     inc bx
-    jmp STI_lp 
+    jmp STI_lp
+    STI_over:
+    mov cx, 0ffffh  
     STI_lp_end:
     ret
 ROMAN_TO_INT endp 
