@@ -92,10 +92,7 @@ print_str romanToArabStr
 ;
 call ROMAN_TO_INT
 push ax
-; call TO_ARAB !
-;
-;
-;
+call INT_TO_STR
 pop ax
 print_str output
 jmp retry
