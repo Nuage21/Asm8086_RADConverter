@@ -99,6 +99,11 @@ jmp retry
 
 toArabCnvrt:
 ;
+mov ax, 0eeeeh ; destinguish from ret values
+call ROMAN_REP_VLD
+cmp ax, 0ffffh
+je invalid
+
 xor cx, cx ; cx = 0xffffh means overflow (roman number entered >16bits)
 call ROMAN_TO_INT
 cmp cx, 0ffffh
@@ -609,8 +614,77 @@ INT_TO_STR proc
     ITS_end:
     pop bp
     ret
-INT_TO_STR endp
+INT_TO_STR endp  
+;-------------------------------------------------------
 
+ROMAN_REP_VLD proc
+    ; checks roman digits repetition
+    ; ret: ax = 0xffff => ERROR
+    ; ret: ax = 0 => ALRIGHT
+    xor cx, cx
+    lea bx, LROMAN_DIGITS
+    RRV_lp:
+    inc cx
+    xor ax, ax
+    mov dl, [bx]
+    lea si, input
+    RRV_wl:
+    mov dh, [si]
+    cmp dh, '$'; [si]
+    je RRV_wl_end
+    cmp dh, dl
+    je RRV_ctct
+    RRV_cmp:
+    push dx
+    sub dl, 32
+    cmp dh, dl
+    pop dx
+    jne RRV_else1
+    RRV_ctct:
+    inc ah 
+    jmp RRV_ici
+    RRV_else1:
+    cmp ah, al
+    jb RRV_reset
+    mov al, ah
+    RRV_reset:
+    xor ah, ah
+    RRV_ici:
+    inc si
+    jmp RRV_wl
+    RRV_wl_end: 
+    cmp ah, al
+    jb RRV_GO
+    mov al, ah
+    RRV_GO:
+    inc bx
+    cmp dl, 'm'
+    jne RRV_M
+    jmp RRV_lpq
+    RRV_M:
+    cmp dl, 'M'    
+    je RRV_lpq
+    cmp al, 4
+    jb RRV_else2
+    RRV_FLS:
+    mov ax, 0ffffh
+    ret
+    RRV_else2:
+    cmp dl, 'd'
+    jne RRV_D
+    cmp al, 2
+    jge RRV_FLS
+    RRV_D:
+    cmp dl, 'D'
+    jne RRV_lpq
+    cmp al, 2
+    jge RRV_FLS
+    RRV_lpq:
+    cmp cx, 7
+    je RRV_end
+    jmp RRV_lp
+    RRV_end:
+    mov ax, 0
+    ret
+ROMAN_REP_VLD endp
 ;-----------------------------------code_seg_end--------
-
-
